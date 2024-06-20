@@ -1,6 +1,7 @@
 package med.voll.api_voll.infra.expection;
 
 import jakarta.persistence.EntityNotFoundException;
+import med.voll.api_voll.domain.ValidacaoException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,6 +57,11 @@ public class TratadorDeErros{
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity tratarDuplicados(Exception ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Dados já cadastrados");
+    }
+
+    @ExceptionHandler(ValidacaoException.class)
+    public ResponseEntity tratarErroRegraDeNegocio(ValidacaoException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
     private record DadosErroValidacao(String campo, String mensagem) {
